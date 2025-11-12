@@ -91,7 +91,11 @@ struct tuple_size;
 template <typename... Types>
 struct tuple_size<my_tuple<Types...>> : std::integral_constant<std::size_t, sizeof...(Types)> {};
 
-//tie
+
+template <typename... Args>
+auto my_tie(Args&... args) noexcept {
+    return my_tuple<Args&...>(args...);
+}
 
 int main() {
     my_tuple<int, Empty, double, Empty, int> t(1, {}, 3.14, {}, 42);
