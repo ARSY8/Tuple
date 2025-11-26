@@ -3,12 +3,13 @@
 #include <utility>
 #include <type_traits>
 
-struct Empty {};
+// struct Empty {};
 
 template <std::size_t I, typename T, bool = std::is_empty_v<T> && !std::is_final_v<T>>
 struct TupleElement;
 
-
+//если не мувбл
+// std::taple :)
 template <std::size_t I, typename T>
 struct TupleElement<I, T, false> {
     T value;
@@ -43,11 +44,9 @@ struct TupleImplementation<std::index_sequence<Is...>, Ts...> : TupleElement<Is,
     TupleImplementation() = default;
 
     
-    TupleImplementation(const Ts&... args)
-        : TupleElement<Is, Ts>(args)... {}
-
-    TupleImplementation(Ts&&... args)
-        : TupleElement<Is, Ts>(std::move(args))... {}
+    template <typename... Us>
+    TupleImplementation(Us&&... args)
+        : TupleElement<Is, Ts>(std::forward<Us>(args))... {}
 
     template <std::size_t I>
     auto& get() noexcept {
@@ -97,32 +96,32 @@ auto my_tie(Args&... args) noexcept {
     return my_tuple<Args&...>(args...);
 }
 
-int main() {
-    my_tuple<int, Empty, double, Empty, int> t(1, {}, 3.14, {}, 42);
+// int main() {
+//     my_tuple<int, Empty, double, Empty, int> t(1, {}, 3.14, {}, 42);
 
-    std::cout << "sizeof(my_tuple<int, Empty, double, Empty, int>) = "
-        << sizeof(t) << '\n';
-    std::cout << get<0>(t) << ", " << get<2>(t) << ", " << get<4>(t) << '\n';
+//     std::cout << "sizeof(my_tuple<int, Empty, double, Empty, int>) = "
+//         << sizeof(t) << '\n';
+//     std::cout << get<0>(t) << ", " << get<2>(t) << ", " << get<4>(t) << '\n';
 
 
-    std::cout << "sizeof(Empty) = " << sizeof(Empty) << '\n';
+//     std::cout << "sizeof(Empty) = " << sizeof(Empty) << '\n';
 
-    std::cout << "sizeof(std::tuple<int>) = " << sizeof(std::tuple<int>) << '\n';
-    std::cout << "sizeof(my_tuple<int>) = " << sizeof(my_tuple<int>) << '\n';
+//     std::cout << "sizeof(std::tuple<int>) = " << sizeof(std::tuple<int>) << '\n';
+//     std::cout << "sizeof(my_tuple<int>) = " << sizeof(my_tuple<int>) << '\n';
 
-    std::cout << "sizeof(std::tuple<int, Empty>) = " << sizeof(std::tuple<int, Empty>) << '\n';
-    std::cout << "sizeof(my_tuple<int, Empty>) = " << sizeof(my_tuple<int, Empty>) << '\n';
+//     std::cout << "sizeof(std::tuple<int, Empty>) = " << sizeof(std::tuple<int, Empty>) << '\n';
+//     std::cout << "sizeof(my_tuple<int, Empty>) = " << sizeof(my_tuple<int, Empty>) << '\n';
 
-    std::cout << "sizeof(std::tuple<int, Empty, double>) = " << sizeof(std::tuple<int, Empty, double>) << '\n';
-    std::cout << "sizeof(my_tuple<int, Empty, double>) = " << sizeof(my_tuple<int, Empty, double>) << '\n';
+//     std::cout << "sizeof(std::tuple<int, Empty, double>) = " << sizeof(std::tuple<int, Empty, double>) << '\n';
+//     std::cout << "sizeof(my_tuple<int, Empty, double>) = " << sizeof(my_tuple<int, Empty, double>) << '\n';
 
-    std::cout << "sizeof(std::tuple<int, Empty, double, Empty, int>) = "
-        << sizeof(std::tuple<int, Empty, double, Empty, int>) << '\n';
-    std::cout << "sizeof(my_tuple<int, Empty, double, Empty, int>) = "
-        << sizeof(my_tuple<int, Empty, double, Empty, int>) << '\n';
+//     std::cout << "sizeof(std::tuple<int, Empty, double, Empty, int>) = "
+//         << sizeof(std::tuple<int, Empty, double, Empty, int>) << '\n';
+//     std::cout << "sizeof(my_tuple<int, Empty, double, Empty, int>) = "
+//         << sizeof(my_tuple<int, Empty, double, Empty, int>) << '\n';
 
-    std::cout << "sizeof(std::tuple<int, int, double, Empty, Empty>) = "
-        << sizeof(std::tuple<int, int, double, Empty, Empty>) << '\n';
-    std::cout << "sizeof(my_tuple<int, int, double, Empty, Empty>) = "
-        << sizeof(my_tuple<int, int, double, Empty, Empty>) << '\n';
-}
+//     std::cout << "sizeof(std::tuple<int, int, double, Empty, Empty>) = "
+//         << sizeof(std::tuple<int, int, double, Empty, Empty>) << '\n';
+//     std::cout << "sizeof(my_tuple<int, int, double, Empty, Empty>) = "
+//         << sizeof(my_tuple<int, int, double, Empty, Empty>) << '\n';
+// }
